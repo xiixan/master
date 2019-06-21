@@ -32,9 +32,12 @@ def question_detail(request):
 
     if request.user.is_authenticated():
         user = request.user
-        # if user.level != question.level.level:
-        #     raise PermissionDenied
-
+        print user.level
+        print question.level.level
+        print question.level and user.level != question.level.level
+        if question.level and user.level < question.level.level:
+            # raise PermissionDenied
+            return render(request, 'failure.html', {'reason': "您的等级太低了哟"})
     # 评论表单
         comment_form = CommentForm({'author': request.user.username,
                                     'email': request.user.email,
