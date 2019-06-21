@@ -9,6 +9,7 @@ from forms import *
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.hashers import make_password, check_password
 from data import *
+from admin import *
 
 # Create your views here.
 def index(request):
@@ -50,6 +51,10 @@ def question_detail(request):
         if comment.pid is None:
             comment_list.append(comment)
     return render(request,"question_detail.html",locals())
+
+def change_comment(request):
+    CommentAdmin.changeform_view
+    pass
 
 # 注销
 def do_logout(request):

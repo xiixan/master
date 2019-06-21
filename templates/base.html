@@ -16,6 +16,9 @@
 	<!--<script src="js/snowy.js"></script>-->
 	{% block headHtml%}
 	{% endblock %}
+	<script>
+	
+	</script>
 	<body>
 		<div class="w_header">
 			<div class="container">
@@ -36,8 +39,8 @@
 				</span>
 					<div class="w_search">
 						<div class="w_searchbox">
-							<input type="text" placeholder="search" />
-							<button>搜索</button>
+							<input type="text" placeholder="search" name="search" />
+							<button onclick="search()">搜索</button>
 						</div>
 					</div>
 				</div>
@@ -341,6 +344,13 @@
 				$backToTopEle.css("top", st + winh - 166);
 			}
 		};
+
+		function search(){
+			var search_text = $("input[name='search']").val();
+			if(search_text){
+				window.location.href = "/?title="+search_text;
+			}
+		}
 
 		$(function() {
 			$(window).on("scroll", backToTopFun);

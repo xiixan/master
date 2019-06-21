@@ -11,12 +11,14 @@ def question_page_data(request):
     #先获取客户提交的信息
     # 得到页码
     pageno = request.GET.get('page',1)
-    tag_param = request.GET.get('tag','')
-    level_param = request.GET.get('level','')
-
-    if tag_param != "":
+    tag_param = request.GET.get('tag',None)
+    level_param = request.GET.get('level',None)
+    title_param = request.GET.get('title',None)
+    if title_param:
+        question_all = Question.objects.filter(title__contains =title_param);
+    elif tag_param:
         question_all = Question.objects.filter(tag__name =tag_param);
-    if level_param != "":
+    elif level_param:
         # levels = Level.objects.filter(name=level_param)
         question_all = Question.objects.filter(level__name =level_param);
     else:

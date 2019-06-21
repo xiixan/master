@@ -24,9 +24,9 @@ class User(AbstractUser):
     avatar = models.ImageField(upload_to='avatar/%Y/%m', default='avatar/default.png', max_length=200, blank=True, null=True, verbose_name='用户头像')
     qq = models.CharField(max_length=20, blank=True, null=True, verbose_name='QQ号码')
     mobile = models.CharField(max_length=11, blank=True, null=True, unique=True, verbose_name='手机号码')
-    level = models.IntegerField(max_length=10,blank=True, null=True, verbose_name='等级',choices=LEVEL_IN_USER_CHOICES,
+    level = models.IntegerField(blank=True, null=True, verbose_name='等级',choices=LEVEL_IN_USER_CHOICES,
         default=ONE,)
-    num = models.IntegerField(max_length=10,blank=True, null=True, verbose_name='答题数量')
+    num = models.IntegerField(blank=True, null=True, verbose_name='答题数量')
 
     class Meta:
         verbose_name = '用户'
@@ -62,7 +62,7 @@ class Question(models.Model):
     title = models.CharField(max_length=50, verbose_name='Question背景')
     desc = models.CharField(max_length=50, verbose_name='Question描述')
     content = HTMLField('Question描述')#models.TextField(verbose_name='Question内容')
-    click_count = models.IntegerField(default=0, verbose_name='测试次数')
+    successCount = models.IntegerField(default=0, verbose_name='成功次数')
     is_recommend = models.BooleanField(default=False, verbose_name='是否推荐')
     date_publish = models.DateTimeField(auto_now_add=True, verbose_name='发布时间')
     user = models.ForeignKey(User, verbose_name='用户')
@@ -99,6 +99,7 @@ class Comment(models.Model):
     user = models.ForeignKey(User, blank=True, null=True, verbose_name='用户')
     question = models.ForeignKey(Question, blank=True, null=True, verbose_name='题目')
     pid = models.ForeignKey('self', blank=True, null=True, verbose_name='父级评论')
+    isSuccess = models.NullBooleanField(blank=True, null=True, verbose_name='是否正确')
 
     class Meta:
         verbose_name = '评论'
