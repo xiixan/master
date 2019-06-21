@@ -7,6 +7,7 @@ from django.core.paginator import Paginator,InvalidPage,EmptyPage,PageNotAnInteg
 '''
 这个方法为获取题库数据
 '''
+
 def question_page_data(request):
     #先获取客户提交的信息
     # 得到页码

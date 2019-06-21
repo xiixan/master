@@ -7,10 +7,7 @@ from django.contrib.auth.models import AbstractUser
 from tinymce.models import HTMLField
 # Create your models here.
 
-# 用户模型.
-# 第一种：采用的继承方式扩展用户信息（本系统采用）
-# 扩展：关联的方式去扩展用户信息
-class User(AbstractUser):
+class LevelEnums():
     ONE = 1
     TWO = 2
     THREE = 3
@@ -21,11 +18,16 @@ class User(AbstractUser):
         (THREE, '黄金'),
         (FOUR, '大佬'),
     )
+
+# 用户模型.
+# 第一种：采用的继承方式扩展用户信息（本系统采用）
+# 扩展：关联的方式去扩展用户信息
+class User(AbstractUser):
     avatar = models.ImageField(upload_to='avatar/%Y/%m', default='avatar/default.png', max_length=200, blank=True, null=True, verbose_name='用户头像')
     qq = models.CharField(max_length=20, blank=True, null=True, verbose_name='QQ号码')
     mobile = models.CharField(max_length=11, blank=True, null=True, unique=True, verbose_name='手机号码')
-    level = models.IntegerField(blank=True, null=True, verbose_name='等级',choices=LEVEL_IN_USER_CHOICES,
-        default=ONE,)
+    level = models.IntegerField(blank=True, null=True, verbose_name='等级',choices=LevelEnums.LEVEL_IN_USER_CHOICES,
+        default=LevelEnums.ONE,)
     num = models.IntegerField(blank=True, null=True, verbose_name='答题数量')
 
     class Meta:
@@ -49,6 +51,8 @@ class Tag(models.Model):
 
 class Level(models.Model):
     name = models.CharField(max_length=30, verbose_name='题目级别')
+    level = models.IntegerField(blank=True, null=True, verbose_name='等级',choices=LevelEnums.LEVEL_IN_USER_CHOICES,
+        default=LevelEnums.ONE,)
 
     class Meta:
         verbose_name = '级别'

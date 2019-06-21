@@ -8,6 +8,7 @@ from models import *
 from forms import *
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.hashers import make_password, check_password
+from django.core.exceptions import PermissionDenied
 from data import *
 from admin import *
 
@@ -30,13 +31,16 @@ def question_detail(request):
         return render(request, 'failure.html', {'reason': '没有找到对应的文章'})
 
     if request.user.is_authenticated():
+        user = request.user
+        # if user.level != question.level.level:
+        #     raise PermissionDenied
+
     # 评论表单
         comment_form = CommentForm({'author': request.user.username,
                                     'email': request.user.email,
                                     'question': question.id})
     else:
-        comment_form = CommentForm({'author': request.user.username,
-                                    'question': question.id})
+        raise PermissionDenied
     # 获取评论信息
     comments = Comment.objects.filter(question=question).order_by('id')
     comment_list = []
