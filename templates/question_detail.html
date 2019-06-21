@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load staticfiles %}	
+	{% block head %}
+	<ul>
+		<li><a href="/">首页</a></li>
+		<li><a href="{% url 'questions' %}" class="active">题库</a></li>
+		<li><a href="user.html">用户</a></li>
+		<li><a href="moodList.html">博客</a></li>
+		<li><a href="comment.html">留言</a></li>
+	</ul>
+	{% endblock %}
+	{% block left%}
+		<ol class="breadcrumb w_breadcrumb">
+			<li><a href="#">首页</a></li>
+			<li><a href="#">题库</a></li>
+			<li class="active">{{ question.title}}</li>
+			<span class="w_navbar_tip">我们长路漫漫，只因学无止境。</span>
+		</ol>
+		
+		<div class="col-lg-9 col-md-9 w_main_left">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<h2 class="c_titile">{{ question.title}}</h2>
+					<p class="box_c"><span class="d_time">发布时间：{{ question.date_publish}}</span><span>编辑：{{question.user.username}}</span><span> 阅读（88646）</span></p>
+					<ul class="infos">
+						{{ question.content | safe }}
+					</ul>
+													
+					<div class="keybq">
+						<p><span>标签</span>：
+						{% for tag in question.tag.all %}
+						<a class="label label-default">{{ tag.name}}</a>
+						{% endfor %}   
+					</div>
+					
+				</div>
+			</div>
+			
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<span class="pingl f_r">提交数:（<a href="/">{{ question.comment_set.all.count }}</a>）</span></p>
+
+					<ol class="commentlist">
+						{% for comment in comment_list %}
+						<li id="comment-59418">
+								<div class="top">{{ comment.username }}<span class="time"> @ <a href="#comment-59418" title="">{{ comment.date_publish | date:'Y-m-d H:i:s' }}</a></span></div>
+								<div><img alt='' src='{% static 'images/default.jpg' %}' class='avatar avatar-32 photo' height='32' width='32' /></div>
+
+								<div class="body">
+												<p>{{ comment.content }}</p>
+								</div>
+						</li>
+						{% for children_comment in comment.children_comment %}
+						<li id="comment-59542">
+								<div class="reply">
+								<div class="top">{{ children_comment.username }}<span class="time"> @ <a href="#comment-59543" title="">{{ children_comment.date_publish | date:'Y-m-d H:i:s' }}</a></span></div>
+								<div><img alt="" src="{% static 'images/default.jpg' %}" class="avatar avatar-32 photo" height="32" width="32"></div>
+
+								<div class="body">
+														{{ children_comment.content }}                  </div>
+								</div>
+						</li>
+						{% endfor %}
+						{% endfor %}
+					</ol>
+
+					<div id="commentform">
+						<h3 id="respond">Add your answer now</h3>
+						{% if not request.user.is_authenticated %}
+							<div class='login_info'>还没有登陆？可以登录后再评论哦。
+						{% else %}
+							<div class='login_info'><b>{{ request.user.username }}</b>,快来写点评论吧!&nbsp;</div>
+							<form action="{% url 'comment_post' %}" method="post">
+								{% csrf_token %}
+								<div style="display:none;">
+									<p>{{ comment_form.author }}
+										<label for="author">Name (required)</label>
+									</p>
+
+									<p>{{ comment_form.email }}
+										<label for="email">Email (Will NOT be published) (required)</label>
+									</p>
+								</div>
+								<p width="100%%">{{ comment_form.comment }}</p>
+								<p>
+									{{ comment_form.question }}
+									<input name="submit" type="submit" id="submit" tabindex="5" value="Submit" class="button" />
+								</p>
+							</form>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+		{% endblock %}
+		{% block right %}
+		<div class="col-lg-3 col-md-3 w_main_right">
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">
+				<h3 class="panel-title">最新发布</h3>
+				</div>
+				<div class="panel-body">
+					<ul class="list-unstyled sidebar">				
+						<li><a href="/post/04928311">排序算法之冒泡排序 － java实现</a></li>
+						<li><a href="/post/32097759">快速搭建基于二进制日志文件的 mysql 复制</a></li>							
+						<li><a href="/post/09196557">web 服务器负载均衡教程，快速搭建高可用服务器集群</a></li>							
+						<li><a href="/post/20654391">使用 redis 和 spring-session 实现 tomcat、glassfish 等 web 服务器集群 session 共享</a></li>							
+						<li><a href="/post/41501569">使用 Nginx 实现 tomcat、glassfish 等 web 服务器负载均衡</a></li>							
+						<li><a href="/post/89658700">mysql 复制（replication）基础概念和应用场景简介</a></li>							
+						<li><a href="/post/03088922">redis 单节点在 Linux 生产环境的安装和简单配置</a></li>							
+						<li><a href="/post/05203355">使用 jQuery 的 val() 方法来获取以及设置表单元素值</a></li>							
+						<li><a href="/post/03120718">使用 jQuery 的 removeProp() 方法来删除元素的特性（property）</a></li>							
+						<li><a href="/post/37454977">使用 jQuery 的 prop() 方法来获取以及设置元素的特性（property）</a></li>							
+				</ul>
+				</div>
+			</div>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">
+				<h3 class="panel-title">友情链接</h3>
+				</div>
+				<div class="panel-body">
+				<div class="newContent">
+					<ul class="list-unstyled sidebar shiplink">				
+						<li><a href="https://www.baidu.com/" target="_blank">百度</a></li>
+						<li><a href="https://www.oschina.net/" target="_blank">开源中国</a></li>							
+						<li><a href="http://www.ulewo.com/" target="_blank">有乐网</a></li>							
+						<li><a href="http://www.sina.com.cn/" target="_blank">新浪网</a></li>							
+						<li><a href="http://www.qq.com/" target="_blank">腾讯网</a></li>							
+					</ul>
+				</div>
+				</div>
+			</div>
+		</div>
+		{% endblock %}
