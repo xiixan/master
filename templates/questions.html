@@ -27,9 +27,10 @@
 								{% for tag in question.tag.all %}
 								<a class="label label-default">{{ tag.name}}</a>
 								{% endfor %}
+								<a class="label label-default">{{ question.level.name}}</a>
 							</p>
 							<p class="overView">{{ question.content | safe }}</p>
-							<p><span class="count"><i class="glyphicon glyphicon-user"></i><a href="#">{{question.user.username}}</a></span> <span class="count"><i class="glyphicon glyphicon-eye-open"></i>阅读:666</span><span class="count"><i class="glyphicon glyphicon-comment"></i>评论:18</span><span class="count"><i class="glyphicon glyphicon-time"></i>2017-02-07</span></p>
+							<p><span class="count"><i class="glyphicon glyphicon-user"></i><a href="#">{{question.user.username}}</a></span> <span class="count"><i class="glyphicon glyphicon-eye-open"></i>阅读:{{ question.count }}</span><span class="count"><i class="glyphicon glyphicon-comment"></i>评论:{{ question.comment_set.all.count }}</span><span class="count"><i class="glyphicon glyphicon-time"></i>{{ question.date_publish }}</span></p>
 
 						</div>
 					</div>

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+	{% block head %}
+	<ul>
+		<li><a href="/">首页</a></li>
+		<li><a href="{% url 'questions' %}" >题库</a></li>
+		<li><a href="{% url 'user' %}" class="active">用户</a></li>
+		<li><a href="moodList.html">博客</a></li>
+		<li><a href="comment.html">留言</a></li>
+	</ul>
+	{% endblock %}
+	{% block left%}
+		<ol class="breadcrumb w_breadcrumb">
+			<li><a href="#">首页</a></li>
+			<li class="active">用户</li>
+			<span class="w_navbar_tip">我们长路漫漫，只因学无止境。</span>
+		</ol>
+		<div class="col-lg-9 col-md-9 w_main_left">		
+			<div class="panel panel-default">
+				<div class="contentList">
+					{% for comment in comments_user %}
+					<div class="panel panel-default">
+						<div class="panel-body">
+
+							<h4>
+								<a class="title" href="{% url 'question_detail' %}?cid={{comment.question.id}}">
+								{{comment.question.title}}
+								</a>
+							</h4>
+							<p></p>
+								{% for tag in comment.question.tag.all %}
+								<a class="label label-default">{{ tag.name}}</a>
+								{% endfor %}
+								<a class="label label-default">{{ comment.question.level.name}}</a>
+							</p>
+							<p class="overView">{{ comment.content | safe }}</p>
+							<p>
+								<span class="count">
+									<i class="glyphicon glyphicon-ok"></i>
+									<a href="#">{{comment.isSuccess}}</a>
+								</span>
+								<span class="count">
+									<i class="glyphicon glyphicon-time"></i>
+									{{ comment.date_publish }}
+								</span>
+							</p>
+
+						</div>
+					</div>
+					{% endfor %}
+					<ul class="pager">
+						{% if question_all.has_previous %}
+						<li><a href="?page={{ question_all.previous_page_number }}">&laquo;上一页</a></li>
+						{% else %}
+						<li>&laquo;上一页</li>
+						{% endif %}
+						<li>{{ question_all.number }}/{{ question_all.paginator.num_pages }}</li>
+						{% if question_all.has_next %}
+						<li><a href="?page={{ question_all.next_page_number }}">下一页 &raquo;</a></li>
+						{% else %}
+						<li>下一页 &raquo;</li>
+						{% endif %}
+					</ul>
+				</div>
+			</div> 
+		</div> 
+		{% endblock %}
+		{% block right %}
+		<div class="col-lg-3 col-md-3 w_main_right">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+				  	<h3 class="panel-title">用户信息</h3>
+				</div>
+				<div class="panel-body">
+					<ul class="list-unstyled sidebar">				
+						<li>用户名:{{request.user.name}}</li>
+						<li>电子邮件地址:{{request.user.email}}</li>
+						<li>等级:{{request.user.get_level_display |default_if_none:""}}</li>	
+						<li>答题数量:{{request.user.num |default_if_none:"0"}}</li>					
+				  	</ul>
+				</div>
+			</div>
+		</div>
+		{%endblock%}

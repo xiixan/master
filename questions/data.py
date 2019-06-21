@@ -10,8 +10,6 @@ from django.core.paginator import Paginator,InvalidPage,EmptyPage,PageNotAnInteg
 
 def question_page_data(request):
     #先获取客户提交的信息
-    # 得到页码
-    pageno = request.GET.get('page',1)
     tag_param = request.GET.get('tag',None)
     level_param = request.GET.get('level',None)
     title_param = request.GET.get('title',None)
@@ -19,6 +17,7 @@ def question_page_data(request):
         question_all = Question.objects.filter(title__contains =title_param);
     elif tag_param:
         question_all = Question.objects.filter(tag__name =tag_param);
+        question_all = question_all.values().distinct()
     elif level_param:
         # levels = Level.objects.filter(name=level_param)
         question_all = Question.objects.filter(level__name =level_param);
@@ -27,7 +26,7 @@ def question_page_data(request):
         
     paginator = Paginator(question_all, 10)
     try:
-        page = int(request.GET.get('page', pageno))
+        page = int(request.GET.get('page', 1))
         question_all = paginator.page(page)
     except(EmptyPage, InvalidPage, PageNotAnInteger):
         question_all = paginator.page(1)
@@ -47,3 +46,16 @@ def tags_all_data(request):
 def levels_all_data(request):
     levels_all = Level.objects.all();
     return levels_all
+
+def comments_user_data(request):
+    user = request.user
+    levels_user = Comment.objects.filter(user=user);
+    paginator = Paginator(levels_user, 10)
+    try:
+        page = int(request.GET.get('page', 1))
+        levels_user = paginator.page(page)
+    except(EmptyPage, InvalidPage, PageNotAnInteger):
+        levels_user = paginator.page(1)
+        pass
+
+    return levels_user

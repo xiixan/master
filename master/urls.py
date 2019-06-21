@@ -35,4 +35,5 @@ urlpatterns = [
     url(r'^question_detail', question_detail, name='question_detail'),
     url(r'^questions', questions, name='questions'),
     url(r'^category/$', category, name='category'),
+     url(r'^user', user, name='user'),
 ]

@@ -19,6 +19,16 @@ def index(request):
     levels_all = levels_all_data(request)
     return render(request,"index.html",locals())
 
+def user(request):
+    if not request.user.is_authenticated():
+        raise PermissionDenied
+    comments_user = comments_user_data(request)
+    user = request.user
+    for level in LevelEnums.LEVEL_IN_USER_CHOICES:
+        if level[0] == user.level:
+            user.level = level[1]
+    return render(request,"user.html",locals())
+
 def questions(request):
     question_all = question_page_data(request)
     return render(request,"questions.html",locals())
@@ -26,15 +36,14 @@ def questions(request):
 def question_detail(request):
     try:
         question = question_data(request)
+        question.count +=1
+        question.save();
     except Question.DoesNotExist as e:
         print e
         return render(request, 'failure.html', {'reason': '没有找到对应的文章'})
 
     if request.user.is_authenticated():
         user = request.user
-        print user.level
-        print question.level.level
-        print question.level and user.level != question.level.level
         if question.level and user.level < question.level.level:
             # raise PermissionDenied
             return render(request, 'failure.html', {'reason': "您的等级太低了哟"})
@@ -133,6 +142,8 @@ def comment_post(request):
                                              question_id=comment_form.cleaned_data["question"],
                                              user=request.user if request.user.is_authenticated() else None)
             comment.save()
+            comment.user.num +=1;
+            comment.user.save();
             print "comment is success be saved!!!"
         else:
             return render(request, 'failure.html', {'reason': comment_form.errors})

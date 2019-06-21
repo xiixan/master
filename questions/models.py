@@ -38,6 +38,7 @@ class User(AbstractUser):
     def __unicode__(self):
         return self.username
 
+
     #标签
 class Tag(models.Model):
     name = models.CharField(max_length=30, verbose_name='题目标签')
@@ -67,6 +68,7 @@ class Question(models.Model):
     desc = models.CharField(max_length=50, verbose_name='Question描述')
     content = HTMLField('Question描述')#models.TextField(verbose_name='Question内容')
     successCount = models.IntegerField(default=0, verbose_name='成功次数')
+    count = models.IntegerField(default=0, verbose_name='所有次数')
     is_recommend = models.BooleanField(default=False, verbose_name='是否推荐')
     date_publish = models.DateTimeField(auto_now_add=True, verbose_name='发布时间')
     user = models.ForeignKey(User, verbose_name='用户')
