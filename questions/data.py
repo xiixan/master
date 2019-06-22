@@ -17,7 +17,7 @@ def question_page_data(request):
         question_all = Question.objects.filter(title__contains =title_param);
     elif tag_param:
         question_all = Question.objects.filter(tag__name =tag_param);
-        question_all = question_all.values().distinct()
+        question_all = question_all.distinct()
     elif level_param:
         # levels = Level.objects.filter(name=level_param)
         question_all = Question.objects.filter(level__name =level_param);
